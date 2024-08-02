@@ -1,6 +1,6 @@
 package org.example.catalogo;
 
-
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -38,5 +38,28 @@ public class CatalogoServizio {
                 .map(item -> (Libro) item)
                 .filter(libro -> libro.getAutore().equalsIgnoreCase(autore))
                 .collect(Collectors.toList());
+    }
+
+
+    public void salvaCatalogo(String nomeFile, List<CatalogoOggetto> catalogo) throws IOException {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(nomeFile))) {
+            oos.writeObject(catalogo);
+        }
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public void caricaCatalogo(String nomeFile) throws IOException, ClassNotFoundException {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(nomeFile))) {
+            catalogo = (List<CatalogoOggetto>) ois.readObject();
+        }
+    }
+
+
+    public List<CatalogoOggetto> getCatalogo() {
+        return catalogo;
+    }
+    public List<CatalogoOggetto> getTuttiElementi() {
+        return new ArrayList<>(catalogo);
     }
 }
